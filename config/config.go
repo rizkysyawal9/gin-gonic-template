@@ -2,9 +2,9 @@ package config
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"log"
 )
 
 type Config struct {
@@ -12,31 +12,36 @@ type Config struct {
 	ApiBaseUrl     string
 	RunMigration   string
 	DataSourceName string
-	// TableManagementConfig TableManagementConfig
 }
 
-// type TableManagementConfig struct {
-// 	ApiBaseUrl string
-// }
+func viperEnv(key string) string {
+	viper.SetConfigFile(".env")
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatalf("Error while reading config file %s", err)
+	}
+	value, ok := viper.Get(key).(string)
+	if !ok {
+		log.Fatalf("Invalid type assertion")
+	}
+	return value
+}
 
 func NewConfig() *Config {
 	config := new(Config)
-	runMigration := os.Getenv("DB_MIGRATION")
-	apiHost := os.Getenv("API_HOST")
-	apiPort := os.Getenv("API_PORT")
+	runMigration := viperEnv("DB_MIGRATION")
+	apiHost := viperEnv("API_HOST")
+	apiPort := viperEnv("API_PORT")
 
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := viperEnv("DB_HOST")
+	dbPort := viperEnv("DB_PORT")
+	dbName := viperEnv("DB_NAME")
+	dbUser := viperEnv("DB_USER")
+	dbPassword := viperEnv("DB_PASSWORD")
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
+	fmt.Println(dsn)
 	config.DataSourceName = dsn
-
-	// tableManagementBaseUrl := os.Getenv("TABLE_API")
-	// tableManagementConfig := TableManagementConfig{ApiBaseUrl: tableManagementBaseUrl}
-	// config.TableManagementConfig = tableManagementConfig
 
 	r := gin.Default()
 	config.RouterEngine = r

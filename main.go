@@ -1,8 +1,8 @@
 package main
 
 import (
-	"menu-manage/api"
-	// "menu-manage/config"
+	"travelezat-dev/api"
+	// "travelezat-dev/config"
 )
 
 func main() {

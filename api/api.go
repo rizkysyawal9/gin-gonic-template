@@ -3,10 +3,10 @@ package api
 import (
 	"database/sql"
 	"log"
-	"menu-manage/config"
-	"menu-manage/delivery"
-	"menu-manage/entity"
-	"menu-manage/manager"
+	"travelezat-dev/config"
+	"travelezat-dev/delivery"
+	"travelezat-dev/entity"
+	"travelezat-dev/manager"
 )
 
 type Server interface {
@@ -20,23 +20,12 @@ type server struct {
 }
 
 func (s *server) Run() {
+	/**
+	If we want to run migration just set the DB_MIGRATION env to y or Y
+	Note: Gin won't run unless the DB_MIGRATION env is not Y or y
+	*/
 	if !(s.config.RunMigration == "Y" || s.config.RunMigration == "y") {
 		db, _ := s.infra.SqlDb().DB()
-		// err := s.infra.SqlDb().AutoMigrate(&entity.Menu{}, &entity.CustomerTableTransaction{}, &entity.CustomerTable{})
-		// if err != nil {
-		// 	log.Panic(err)
-		// }
-		// s.infra.SqlDb().Model(&entity.CustomerTable{}).Save([]entity.CustomerTable{
-		// 	{
-		// 		ID: "T01",
-		// 	},
-		// 	{
-		// 		ID: "T02",
-		// 	},
-		// 	{
-		// 		ID: "T03",
-		// 	},
-		// })
 		defer func(db *sql.DB) {
 			err := db.Close()
 			if err != nil {
@@ -50,40 +39,13 @@ func (s *server) Run() {
 		}
 	} else {
 		db := s.infra.SqlDb()
-		err := db.AutoMigrate(&entity.Menu{}, &entity.CustomerTableTransaction{}, &entity.CustomerTable{})
+		err := db.AutoMigrate(&entity.Menu{})
 		if err != nil {
 			log.Panic(err)
 		}
-		db.Unscoped().Where("id like ?", "%%").Delete(entity.Menu{})
-		db.Model(&entity.CustomerTable{}).Save([]entity.CustomerTable{
-			{
-				ID: "T01",
-			},
-			{
-				ID: "T02",
-			},
-			{
-				ID: "T03",
-			},
-		})
-		db.Model(&entity.Menu{}).Save([]entity.Menu{
-			{
-				ID:       "M0001",
-				MenuName: "Sayur Kankung",
-				Price:    2000,
-			},
-			{
-				ID:       "M0002",
-				MenuName: "Sayur Lodeh",
-				Price:    3000,
-			},
-			{
-				ID:       "M0003",
-				MenuName: "Sayur Jengkol",
-				Price:    5000,
-			},
-		})
-
+		/**
+		Input migration dummy data here
+		*/
 	}
 }
 
@@ -91,7 +53,6 @@ func (s *server) InitRouter() {
 	publicRoute := s.config.RouterEngine.Group("/api")
 	// NewMenuApi(publicRoute, s.usecase.MenuUseCase())
 	delivery.NewMenuApi(publicRoute, s.usecase.MenuUseCase())
-	delivery.NewCustomerTableApi(publicRoute, s.usecase.CustomerTableUseCase())
 }
 
 func NewApiServer() Server {

@@ -3,7 +3,7 @@ package repo
 import (
 	"fmt"
 	"log"
-	"menu-manage/entity"
+	"travelezat-dev/entity"
 
 	"gorm.io/gorm"
 )

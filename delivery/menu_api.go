@@ -1,8 +1,8 @@
 package delivery
 
 import (
-	"menu-manage/delivery/appresponse"
-	"menu-manage/usecase"
+	"travelezat-dev/delivery/appresponse"
+	"travelezat-dev/usecase"
 
 	"github.com/gin-gonic/gin"
 )

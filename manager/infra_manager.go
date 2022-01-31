@@ -2,7 +2,7 @@ package manager
 
 import (
 	"log"
-	"menu-manage/config"
+	"travelezat-dev/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,13 +10,10 @@ import (
 
 type Infra interface {
 	SqlDb() *gorm.DB
-	// HttpClient() *http.Client
-	// Config() *config.Config
 }
 
 type infra struct {
 	db *gorm.DB
-	// config *config.Config
 }
 
 func NewInfra(config *config.Config) Infra {
@@ -28,16 +25,6 @@ func NewInfra(config *config.Config) Infra {
 		db: resource,
 	}
 }
-
-// func (i *infra) HttpClient() *http.Client {
-// 	netClient := &http.Client{
-// 		Timeout: time.Second * 10,
-// 	}
-// 	return netClient
-// }
-// func (i *infra) Config() *config.Config {
-// 	return i.config
-// }
 
 func (i *infra) SqlDb() *gorm.DB {
 	return i.db

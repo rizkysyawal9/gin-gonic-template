@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"menu-manage/entity"
-	"menu-manage/repo"
+	"travelezat-dev/entity"
+	"travelezat-dev/repo"
 )
 
 type MenuUseCase interface {
